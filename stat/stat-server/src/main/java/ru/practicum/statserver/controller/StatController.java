@@ -33,10 +33,10 @@ public class StatController {
     }
 
     @GetMapping("/stats")
-    public Collection<ViewStatsDto> getStat(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    public Collection<ViewStatsDto> getStat(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
                                             @RequestParam(name = "start")
                                             LocalDateTime start,
-                                            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+                                            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
                                             @RequestParam(name = "end")
                                             LocalDateTime end,
                                             @RequestParam(name = "uris", required = false)
