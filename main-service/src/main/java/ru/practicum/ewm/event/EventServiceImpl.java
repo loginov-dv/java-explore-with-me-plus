@@ -53,21 +53,14 @@ public class EventServiceImpl implements EventService {
             return Map.of();
         }
 
-        // Небольшая задержка для синхронизации со stat-service (Олежа не забудь)
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
         List<String> uriList = events.stream()
                 .map(e -> "/events/" + e.getId())
                 .toList();
 
         StatsParamDto statsParamDto = new StatsParamDto();
-        // Используем более узкий временной диапазон (не забыть)
-        statsParamDto.setStart(LocalDateTime.now().minusHours(1));
-        statsParamDto.setEnd(LocalDateTime.now().plusHours(1));
+        // Используем широкий диапазон от начала времени до будущего
+        statsParamDto.setStart(LocalDateTime.of(2000, 1, 1, 0, 0));
+        statsParamDto.setEnd(LocalDateTime.now().plusYears(10));
         statsParamDto.setUris(uriList);
         statsParamDto.setIsUnique(false);
 
