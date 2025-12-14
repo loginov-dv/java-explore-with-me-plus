@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.dto.ApiError;
+import ru.practicum.ewm.exception.AccessViolationException;
 import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.exception.ValidationException;
@@ -65,6 +66,22 @@ public class ErrorHandler {
         return new ApiError(e.getMessage(),
                 "Invalid operation",
                 HttpStatus.BAD_REQUEST.name(),
+                LocalDateTime.now().format(formatter));
+    }
+
+    @ExceptionHandler(AccessViolationException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiError handleAccessViolationException(final AccessViolationException e) {
+        log.warn("403 {}", e.getMessage(), e);
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+
+        e.printStackTrace(printWriter);
+
+        return new ApiError(e.getMessage(),
+                "Forbidden action",
+                HttpStatus.FORBIDDEN.name(),
                 LocalDateTime.now().format(formatter));
     }
 
