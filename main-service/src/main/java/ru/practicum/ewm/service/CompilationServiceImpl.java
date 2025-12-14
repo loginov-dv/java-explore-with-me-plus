@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.dto.comment.CommentShortDto;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.dto.compilation.CompilationParam;
 import ru.practicum.ewm.dto.compilation.NewCompilationDto;
@@ -14,11 +15,14 @@ import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.event.EventMapper;
 import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.ewm.mapper.CommentMapper;
 import ru.practicum.ewm.mapper.CompilationMapper;
+import ru.practicum.ewm.model.comment.Comment;
 import ru.practicum.ewm.model.compilation.Compilation;
 import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.repository.CompilationRepository;
 import ru.practicum.ewm.repository.RequestRepository;
+import ru.practicum.ewm.repository.comment.CommentRepository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +39,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventRepository eventRepository;
     private final RequestRepository requestRepository;
     private final EventMapper eventMapper;
+    private final CommentRepository commentRepository;
 
     @Override
     public CompilationDto create(NewCompilationDto request) {
@@ -132,19 +137,24 @@ public class CompilationServiceImpl implements CompilationService {
         List<Long> eventIds = events.stream()
                 .map(Event::getId)
                 .toList();
-
         Map<Long, Long> confirmedRequestsMap = requestRepository.countConfirmedRequestsByEventIds(eventIds)
                 .stream()
                 .collect(Collectors.toMap(
                         result -> (Long) result[0],
                         result -> (Long) result[1]
                 ));
+        Map<Long, List<Comment>> commentsMap = commentRepository.findByEventIdIn(events.stream()
+                        .map(Event::getId).toList()).stream()
+                .collect(Collectors.groupingBy(comment -> comment.getEvent().getId()));
 
         return events.stream()
                 .map(event -> {
                     Long confirmedRequests = confirmedRequestsMap.getOrDefault(event.getId(), 0L);
                     Long views = 0L;
-                    return eventMapper.toShortDto(event, confirmedRequests, views);
+                    List<CommentShortDto> commentShortDtos = commentsMap.getOrDefault(event.getId(), List.of()).stream()
+                            .map(CommentMapper::toCommentShortDto)
+                            .toList();
+                    return eventMapper.toShortDto(event, confirmedRequests, views, commentShortDtos);
                 })
                 .collect(Collectors.toSet());
     }
