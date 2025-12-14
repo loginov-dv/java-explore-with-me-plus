@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.comment.CommentDto;
 import ru.practicum.ewm.dto.comment.CommentParam;
-import ru.practicum.ewm.dto.comment.UpdateCommentRequest;
 import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.exception.AccessViolationException;
 import ru.practicum.ewm.exception.NotFoundException;

@@ -2,7 +2,6 @@ package ru.practicum.ewm.service.comment;
 
 import ru.practicum.ewm.dto.comment.CommentDto;
 import ru.practicum.ewm.dto.comment.CommentParam;
-import ru.practicum.ewm.dto.comment.UpdateCommentRequest;
 
 import java.util.List;
 
