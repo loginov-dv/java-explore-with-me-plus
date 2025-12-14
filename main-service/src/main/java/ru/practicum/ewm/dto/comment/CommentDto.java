@@ -2,6 +2,7 @@ package ru.practicum.ewm.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public class CommentDto {
     private Long id;
 
     @NotBlank(message = "Текст комментария не может быть пустым")
+    @Size(max = 2000)
     private String text;
 
     private Long userId;
@@ -19,8 +21,6 @@ public class CommentDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
-
-    private boolean edited;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime editedOn;

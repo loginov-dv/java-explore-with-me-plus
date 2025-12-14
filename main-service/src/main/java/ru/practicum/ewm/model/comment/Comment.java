@@ -38,9 +38,6 @@ public class Comment {
     @Column(name = "created_on")
     private LocalDateTime createdOn = LocalDateTime.now();
 
-    @Column(name = "edited")
-    private boolean edited = false;
-
     @Column(name = "edited_on")
     private LocalDateTime editedOn = null;
 }

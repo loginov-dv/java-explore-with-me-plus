@@ -30,7 +30,6 @@ public final class CommentMapper {
         commentDto.setText(comment.getText());
         commentDto.setUserId(comment.getUser().getId());
         commentDto.setEventId(comment.getEvent().getId());
-        commentDto.setEdited(comment.isEdited());
         commentDto.setCreatedOn(comment.getCreatedOn());
         commentDto.setEditedOn(comment.getEditedOn());
 
@@ -39,10 +38,6 @@ public final class CommentMapper {
 
     public static void updateFields(Comment comment, UpdateCommentRequest updateCommentRequest) {
         comment.setText(updateCommentRequest.getText());
-
-        if (!comment.isEdited()) {
-            comment.setEdited(true);
-        }
 
         comment.setEditedOn(LocalDateTime.now());
     }

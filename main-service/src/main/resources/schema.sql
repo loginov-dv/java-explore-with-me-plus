@@ -60,6 +60,5 @@ CREATE TABLE IF NOT EXISTS comments (
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     event_id BIGINT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     created_on TIMESTAMP NOT NULL,
-    edited BOOLEAN NOT NULL,
     edited_on TIMESTAMP
 );

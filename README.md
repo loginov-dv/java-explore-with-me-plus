@@ -15,7 +15,7 @@
 
 #### Ответы
 
-* <code>201</code> Комментарий успешно создан, возвращается <code>CommentDto</code> со всеми полями (<code>edited = false</code>, <code>editedOn = null</code>).
+* <code>201</code> Комментарий успешно создан, возвращается <code>CommentDto</code> со всеми полями (<code>editedOn = null</code>).
 * <code>400</code> Запрос составлен некорректно (отсутствует текст комментария, не указан заголовок).
 * <code>404</code> Пользователь или событие не найдены.
 
@@ -32,7 +32,7 @@
 
 #### Ответы
 
-* <code>200</code> Комментарий успешно изменён, возвращается <code>CommentDto</code> со всеми полями (<code>edited = true</code>, <code>editedOn != null</code>).
+* <code>200</code> Комментарий успешно изменён, возвращается <code>CommentDto</code> со всеми полями (<code>editedOn != null</code>).
 * <code>400</code> Запрос составлен некорректно (отсутствует текст комментария, не указан заголовок).
 * <code>403</code> Нет доступа на редактирование комментария (<code>X-Ewm-User-Id != userId</code>).
 * <code>404</code> Пользователь, событие или комментарий не найдены.
@@ -94,12 +94,10 @@
   "userId": 2,
   "eventId": 3,
   "createdOn": "2022-09-06T21:10:05.432",
-  "edited": false,
   "editedOn": null
 }
 ```
 
-Поле <code>edited</code> устанавливается в <code>true</code>, если комментарий был отредактирован.
 В поле <code>editedOn</code> устанавливается последняя дата редактирования комментария.
 
 ### <code>CommentShortDto</code>
