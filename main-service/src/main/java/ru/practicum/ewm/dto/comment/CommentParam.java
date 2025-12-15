@@ -13,4 +13,6 @@ public class CommentParam {
     private Long commentId;
     private CommentDto commentDto;
     private UpdateCommentRequest updateCommentRequest;
+    private Integer from;
+    private Integer size;
 }
