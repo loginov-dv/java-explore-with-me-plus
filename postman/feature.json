@@ -586,7 +586,7 @@
                   "pm.test(\"Событие содержит список комментариев\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData).to.have.property('comments');",
-                  "    pm.expect(jsonData.comments).to.be.an('array');",
+                  "    pm.expect(jsonData.comments == 2);",
                   "});"
                 ],
                 "type": "text/javascript"
