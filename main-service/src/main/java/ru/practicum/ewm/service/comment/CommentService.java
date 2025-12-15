@@ -15,5 +15,5 @@ public interface CommentService {
 
     void deleteByAdmin(Long eventId, Long commentId);
 
-    List<CommentDto> findAllByEventId(Long eventId);
+    List<CommentDto> findAllByEventId(CommentParam commentParam);
 }
