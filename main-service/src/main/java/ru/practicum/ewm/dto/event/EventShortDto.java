@@ -5,11 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.dto.comment.CommentShortDto;
 import ru.practicum.ewm.dto.user.UserShortDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 public class EventShortDto {
@@ -38,5 +36,5 @@ public class EventShortDto {
 
     private Long views; // дорасчёт, в базе не хранится
 
-    private List<CommentShortDto> comments;
+    private Long comments;
 }

@@ -3,7 +3,6 @@ package ru.practicum.ewm.mapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.ewm.dto.comment.CommentDto;
-import ru.practicum.ewm.dto.comment.CommentShortDto;
 import ru.practicum.ewm.dto.comment.UpdateCommentRequest;
 import ru.practicum.ewm.model.comment.Comment;
 import ru.practicum.ewm.model.event.Event;
@@ -40,15 +39,5 @@ public final class CommentMapper {
         comment.setText(updateCommentRequest.getText());
 
         comment.setEditedOn(LocalDateTime.now());
-    }
-
-    public static CommentShortDto toCommentShortDto(Comment comment) {
-        CommentShortDto commentShortDto = new CommentShortDto();
-
-        commentShortDto.setId(comment.getId());
-        commentShortDto.setText(comment.getText());
-        commentShortDto.setUserId(comment.getUser().getId());
-
-        return commentShortDto;
     }
 }

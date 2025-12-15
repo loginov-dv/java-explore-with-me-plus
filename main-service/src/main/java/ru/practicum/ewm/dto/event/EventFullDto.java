@@ -5,11 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.dto.comment.CommentDto;
 import ru.practicum.ewm.dto.user.UserShortDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 public class EventFullDto {
@@ -55,5 +53,5 @@ public class EventFullDto {
 
     private Long views; // дорасчёт, в базе не хранится
 
-    private List<CommentDto> comments;
+    private Long comments;
 }
