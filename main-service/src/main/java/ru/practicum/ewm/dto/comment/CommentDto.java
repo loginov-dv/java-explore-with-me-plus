@@ -12,7 +12,7 @@ public class CommentDto {
     private Long id;
 
     @NotBlank(message = "Текст комментария не может быть пустым")
-    @Size(max = 2000)
+    @Size(min = 1, max = 2000)
     private String text;
 
     private Long userId;

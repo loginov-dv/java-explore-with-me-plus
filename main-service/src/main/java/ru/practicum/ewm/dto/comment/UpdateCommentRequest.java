@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class UpdateCommentRequest {
 
-    @NotBlank
-    @Size(max = 2000)
+    @NotBlank(message = "Текст комментария не может быть пустым")
+    @Size(min = 1, max = 2000)
     private String text;
 }
