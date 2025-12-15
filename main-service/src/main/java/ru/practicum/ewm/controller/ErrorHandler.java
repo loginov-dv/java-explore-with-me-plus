@@ -1,7 +1,6 @@
 package ru.practicum.ewm.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -117,9 +116,9 @@ public class ErrorHandler {
                 LocalDateTime.now().format(formatter));
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleHibernateConstraintViolationException(final ConstraintViolationException e) {
+    public ApiError handleHibernateConstraintViolationException(final org.hibernate.exception.ConstraintViolationException e) {
         log.warn("409 {}", e.getMessage(), e);
 
         StringWriter stringWriter = new StringWriter();
@@ -130,6 +129,32 @@ public class ErrorHandler {
         return new ApiError(e.getConstraintName() + ": " + e.getKind(),
                 "Integrity constraint has been violated",
                 HttpStatus.CONFLICT.name(),
+                LocalDateTime.now().format(formatter));
+    }
+
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleJakartaConstraintViolationException(final jakarta.validation.ConstraintViolationException e) {
+        log.warn("400 {}", e.getMessage(), e);
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+
+        e.printStackTrace(printWriter);
+
+        Map<String, String> errors = new HashMap<>();
+        e.getConstraintViolations().forEach(constraintViolation -> {
+            String propertyName = constraintViolation.getPropertyPath().toString();
+            String errorMessage = constraintViolation.getMessage();
+
+            errors.put(propertyName, errorMessage);
+        });
+
+        return new ApiError(errors.entrySet().stream()
+                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                .collect(Collectors.joining("; ")),
+                "Request parameters was not valid",
+                HttpStatus.BAD_REQUEST.name(),
                 LocalDateTime.now().format(formatter));
     }
 
