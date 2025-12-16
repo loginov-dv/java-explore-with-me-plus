@@ -12,7 +12,6 @@ import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.event.Location;
 import ru.practicum.ewm.model.user.User;
 
-
 @Mapper(componentModel = "spring")
 public interface EventMapper {
 
@@ -35,12 +34,14 @@ public interface EventMapper {
 
     @Mapping(target = "confirmedRequests", source = "requests")
     @Mapping(target = "views", source = "views")
-    EventShortDto toShortDto(Event event, Long requests, Long views);
+    @Mapping(target = "comments", source = "comments")
+    EventShortDto toShortDto(Event event, Long requests, Long views, Long comments);
 
     @Mapping(target = "confirmedRequests", source = "requests")
     @Mapping(target = "views", source = "views")
     @Mapping(target = "location", source = "event.location")
-    EventFullDto toFullDto(Event event, Long requests, Long views);
+    @Mapping(target = "comments", source = "comments")
+    EventFullDto toFullDto(Event event, Long requests, Long views, Long comments);
 
     Location toLocation(LocationDto locationDto);
 }

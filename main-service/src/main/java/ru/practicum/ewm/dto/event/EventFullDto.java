@@ -52,4 +52,6 @@ public class EventFullDto {
     private String title;
 
     private Long views; // дорасчёт, в базе не хранится
+
+    private Long comments;
 }

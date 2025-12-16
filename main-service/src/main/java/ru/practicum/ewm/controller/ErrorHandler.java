@@ -1,7 +1,6 @@
 package ru.practicum.ewm.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.dto.ApiError;
+import ru.practicum.ewm.exception.AccessViolationException;
 import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.exception.ValidationException;
@@ -68,6 +68,22 @@ public class ErrorHandler {
                 LocalDateTime.now().format(formatter));
     }
 
+    @ExceptionHandler(AccessViolationException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiError handleAccessViolationException(final AccessViolationException e) {
+        log.warn("403 {}", e.getMessage(), e);
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+
+        e.printStackTrace(printWriter);
+
+        return new ApiError(e.getMessage(),
+                "Forbidden action",
+                HttpStatus.FORBIDDEN.name(),
+                LocalDateTime.now().format(formatter));
+    }
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundException(final NotFoundException e) {
@@ -100,9 +116,9 @@ public class ErrorHandler {
                 LocalDateTime.now().format(formatter));
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleHibernateConstraintViolationException(final ConstraintViolationException e) {
+    public ApiError handleHibernateConstraintViolationException(final org.hibernate.exception.ConstraintViolationException e) {
         log.warn("409 {}", e.getMessage(), e);
 
         StringWriter stringWriter = new StringWriter();
@@ -113,6 +129,32 @@ public class ErrorHandler {
         return new ApiError(e.getConstraintName() + ": " + e.getKind(),
                 "Integrity constraint has been violated",
                 HttpStatus.CONFLICT.name(),
+                LocalDateTime.now().format(formatter));
+    }
+
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleJakartaConstraintViolationException(final jakarta.validation.ConstraintViolationException e) {
+        log.warn("400 {}", e.getMessage(), e);
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+
+        e.printStackTrace(printWriter);
+
+        Map<String, String> errors = new HashMap<>();
+        e.getConstraintViolations().forEach(constraintViolation -> {
+            String propertyName = constraintViolation.getPropertyPath().toString();
+            String errorMessage = constraintViolation.getMessage();
+
+            errors.put(propertyName, errorMessage);
+        });
+
+        return new ApiError(errors.entrySet().stream()
+                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                .collect(Collectors.joining("; ")),
+                "Request parameters was not valid",
+                HttpStatus.BAD_REQUEST.name(),
                 LocalDateTime.now().format(formatter));
     }
 
